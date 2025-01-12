@@ -6,13 +6,13 @@ import ProductDetailPageClient from '../../components/ProductDetailPageClient';
 const ProductDetailPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   // Await the params to resolve the Promise
   const resolvedParams = await params;
-  console.log('Resolved Params:', resolvedParams);
+  const { slug } = resolvedParams;
 
   // Fetch all products
   const products: Product[] = await getAllProducts();
 
   // Find product by slug
-  const product = products.find((p) => p.slug?.current === resolvedParams.slug);
+  const product = products.find((p) => p.slug?.current === slug);
 
   if (!product) {
     // Render 404 page if product not found
