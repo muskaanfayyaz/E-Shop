@@ -1,23 +1,25 @@
 // /src/app/product/[slug]/page.tsx
 import { getAllProducts } from '../../../sanity/lib/getProducts';
 import { Product } from '../../types/product';
-import { notFound } from 'next/navigation';
 import ProductDetailPageClient from '../../components/ProductDetailPageClient';
+import { notFound } from 'next/navigation';
 
 const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
-  // Fetch all products from Sanity
+  // Await params to ensure they are fully resolved before using them
+  const { slug } = await params; // Ensure you await `params`
+
+  // Fetch all products
   const products: Product[] = await getAllProducts();
 
-  // Find the product by slug
-  const product = products.find((p) => p.slug?.current === params.slug);
+  // Find product based on the slug
+  const product = products.find((p) => p.slug?.current === slug);
 
   if (!product) {
-    // If product not found, trigger 404 page
-    notFound();
+    notFound(); // Trigger 404 if product not found
     return null;
   }
 
-  // Return the product details to the client component
+  // Return product details to the client component
   return <ProductDetailPageClient product={product} />;
 };
 
