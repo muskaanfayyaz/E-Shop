@@ -3,17 +3,15 @@ import { Product } from '../../types/product';
 import { notFound } from 'next/navigation';
 import ProductDetailPageClient from '../../components/ProductDetailPageClient'; // Client Component import
 
-// Interface to define the expected props for the page
-interface ProductDetailProps {
-  params: { slug: string }; // Dynamic route parameter
-}
+const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
+  // Await the params object before using it
+  const { slug } = await params;
 
-const ProductDetailPage = async ({ params }: ProductDetailProps) => {
   // Fetch all products from Sanity
   const products: Product[] = await getAllProducts();
 
   // Find the specific product by slug
-  const product = products.find((p) => p.slug?.current === params.slug);
+  const product = products.find((p) => p.slug?.current === slug);
 
   if (!product) {
     // If no product is found, render a 404 page
