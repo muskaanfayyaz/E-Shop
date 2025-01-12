@@ -3,21 +3,35 @@ import { Product } from '../../types/product';
 import { notFound } from 'next/navigation';
 import ProductDetailPageClient from '../../components/ProductDetailPageClient'; // Client Component import
 
+// Interface to define the expected props for the page
 interface ProductDetailProps {
-  params: { slug: string };
+  params: { slug: string }; // Dynamic route parameter
 }
 
 const ProductDetailPage = async ({ params }: ProductDetailProps) => {
+  // Fetch all products from Sanity
   const products: Product[] = await getAllProducts();
+
+  // Find the specific product by slug
   const product = products.find((p) => p.slug?.current === params.slug);
 
   if (!product) {
-    notFound(); // Show the 404 page if the product doesn't exist
+    // If no product is found, render a 404 page
+    notFound();
+    return null; // Ensure TypeScript understands this path ends here
   }
 
-  return (
-    <ProductDetailPageClient product={product} />
-  );
+  // Render the product detail client component
+  return <ProductDetailPageClient product={product} />;
 };
 
 export default ProductDetailPage;
+
+// Function to generate static parameters for the dynamic route
+export async function generateStaticParams() {
+  // Fetch all products to create static paths
+  const products: Product[] = await getAllProducts();
+  return products.map((product) => ({
+    slug: product.slug?.current || '', // Ensure slug is safely accessed
+  }));
+}
