@@ -1,34 +1,36 @@
 import { getAllProducts } from '../../../sanity/lib/getProducts';
 import { Product } from '../../types/product';
 import { notFound } from 'next/navigation';
-import ProductDetailPageClient from '../../components/ProductDetailPageClient'; // Client Component import
+import ProductDetailPageClient from '../../components/ProductDetailPageClient';
 
-const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
-  // Log params to debug
-  console.log('Params:', params);
+const ProductDetailPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  // Await the params to resolve the Promise
+  const resolvedParams = await params;
+  console.log('Resolved Params:', resolvedParams);
 
-  // Fetch all products from Sanity
+  // Fetch all products
   const products: Product[] = await getAllProducts();
 
-  // Find the specific product by slug
-  const product = products.find((p) => p.slug?.current === params.slug);
+  // Find product by slug
+  const product = products.find((p) => p.slug?.current === resolvedParams.slug);
 
   if (!product) {
-    // If no product is found, render a 404 page
+    // Render 404 page if product not found
     notFound();
-    return null; // Ensure TypeScript understands this path ends here
+    return null;
   }
 
-  // Render the product detail client component
+  // Render client-side product details
   return <ProductDetailPageClient product={product} />;
 };
 
 export default ProductDetailPage;
 
-// Function to generate static parameters for the dynamic route
+// Generate static paths
 export async function generateStaticParams() {
   const products: Product[] = await getAllProducts();
+
   return products.map((product) => ({
-    slug: product.slug?.current || '', // Ensure slug is safely accessed
+    slug: product.slug?.current || '',
   }));
 }
