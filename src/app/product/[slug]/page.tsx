@@ -3,8 +3,12 @@ import { Product } from '../../types/product';
 import { notFound } from 'next/navigation';
 import ProductDetailPageClient from '../../components/ProductDetailPageClient';
 
-const ProductDetailPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
-  // Await the params to resolve the Promise
+const ProductDetailPage = async ({
+  params,
+}: {
+  params: { slug: string } | Promise<{ slug: string }>;
+}) => {
+  // Await if params is a Promise
   const resolvedParams = await params;
   const { slug } = resolvedParams;
 
