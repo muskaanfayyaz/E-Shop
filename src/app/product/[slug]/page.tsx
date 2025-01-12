@@ -4,14 +4,14 @@ import { notFound } from 'next/navigation';
 import ProductDetailPageClient from '../../components/ProductDetailPageClient'; // Client Component import
 
 const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
-  // Await the params object before using it
-  const { slug } = await params;
+  // Log params to debug
+  console.log('Params:', params);
 
   // Fetch all products from Sanity
   const products: Product[] = await getAllProducts();
 
   // Find the specific product by slug
-  const product = products.find((p) => p.slug?.current === slug);
+  const product = products.find((p) => p.slug?.current === params.slug);
 
   if (!product) {
     // If no product is found, render a 404 page
@@ -27,7 +27,6 @@ export default ProductDetailPage;
 
 // Function to generate static parameters for the dynamic route
 export async function generateStaticParams() {
-  // Fetch all products to create static paths
   const products: Product[] = await getAllProducts();
   return products.map((product) => ({
     slug: product.slug?.current || '', // Ensure slug is safely accessed
