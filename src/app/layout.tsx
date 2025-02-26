@@ -1,21 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Header from "../app/components/header"; // Import Header
-import Footer from "../app/components/footer"; // Import Footer
+import { Inter } from "next/font/google";
+import Header from "./components/header"; // Import Header
+import Footer from "./components/footer"; // Import Footer
 import "./globals.css";
 
-// Define font styles
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Use Inter font from Google Fonts
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Server-side metadata export (no "use client" directive here)
+// Server-side metadata export
 export const metadata: Metadata = {
   title: "E-Shop",
   description: "The best place to shop online",
@@ -28,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body className={`${inter.variable} antialiased`}>
           {/* Include Header */}
           <Header />
 
